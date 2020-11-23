@@ -1,4 +1,4 @@
-package br.dev.marciooliveira.herosapi.conig;
+package br.dev.marciooliveira.herosapi.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -14,30 +14,30 @@ import org.springframework.util.StringUtils;
 @Configuration
 @EnableDynamoDBRepositories
 public class DynamoConfig {
-
     @Value("${amazon.dynamodb.endpoint}")
     private String amazonDynamoDBEndpoint;
 
-    @Value("${aws_acess_key_id}")
-    private String amazonAWSAcesskey;
+    @Value("${aws_access_key_id}")
+    private String amazonAWSAccessKey;
 
     @Value("${aws_secret_access_key}")
     private String amazonAWSSecretKey;
 
     @Bean
-    public  AmazonDynamoDB amazonDynamoDB(){
-        AmazonDynamoDB amazonDynamoDB = new AmazonDynamoDBClient(amazonAWSCredentials());
-        if(!StringUtils.isEmpty(amazonDynamoDBEndpoint)){
-            amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint);
+    public AmazonDynamoDB amazonDynamoDB() {
+        AmazonDynamoDB amazonDynamoDB
+                = new AmazonDynamoDBClient(amazonAWSCredentials());
 
+        if (!StringUtils.isEmpty(amazonDynamoDBEndpoint)) {
+            amazonDynamoDB.setEndpoint(amazonDynamoDBEndpoint);
         }
 
         return amazonDynamoDB;
     }
+
     @Bean
-    public AWSCredentials amazonAWSCredentials(){
+    public AWSCredentials amazonAWSCredentials() {
         return new BasicAWSCredentials(
-                amazonAWSAcesskey, amazonAWSSecretKey
-        );
+                amazonAWSAccessKey, amazonAWSSecretKey);
     }
 }

@@ -1,2 +1,11 @@
-package br.dev.marciooliveira.herosapi.repository;public interface HeroesRepository {
+package br.dev.marciooliveira.herosapi.repository;
+
+import br.dev.marciooliveira.herosapi.document.Heroes;
+import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
+import org.springframework.data.repository.CrudRepository;
+
+@EnableScan
+public interface HeroesRepository extends CrudRepository<Heroes,String> {
+
+
 }

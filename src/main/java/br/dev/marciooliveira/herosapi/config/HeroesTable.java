@@ -1,16 +1,10 @@
-package br.dev.marciooliveira.herosapi.conig;
+package br.dev.marciooliveira.herosapi.config;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import  com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRepositories;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.StringUtils;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
@@ -18,7 +12,8 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
-import br.dev.marciooliveira.herosapi.constans.*;
+import static br.dev.marciooliveira.herosapi.constans.HeroesConstat.REGION_DYNAMO;
+import static br.dev.marciooliveira.herosapi.constans.HeroesConstat.ENDPOINT_DYNAMO;
 
 import java.util.Arrays;
 
@@ -30,7 +25,7 @@ public class HeroesTable {
     public static void main(String[] args) throws Exception{
 
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-                .withCredentials(new AwsClientBuilder.EndpointConfiguration())
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(ENDPOINT_DYNAMO, REGION_DYNAMO))
                 .build();
 
         DynamoDB dynamoDB = new DynamoDB(client);
@@ -38,16 +33,19 @@ public class HeroesTable {
         String tableName = "Heroes_Table";
 
         try {
+            System.out.println("Criando a tabela");
             Table table = dynamoDB.createTable(tableName,
                     Arrays.asList(new KeySchemaElement("id",KeyType.HASH)),
                     Arrays.asList(new AttributeDefinition("id" ,ScalarAttributeType.S)),
-                    new ProvisionedThroughput(5L,5l));
+                    new ProvisionedThroughput(5L,5L));
                     table.waitForActive();
+            System.out.println("Tabela Criada com Sucesso");
 
 
     }
         catch (Exception e){
-            System.out.println(e.getMessage());
+            System.err.println("Não foi possível criar a tabela");
+            System.err.println(e.getMessage());
         }
 
 
